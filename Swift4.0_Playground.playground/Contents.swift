@@ -257,7 +257,7 @@ if let resultClosure: () = playClosure2(xiaoming) {
 
 
 // 8 操作符
-
+/*
 struct Vector2D {
     var x = 0.0
     var y = 0.0
@@ -270,31 +270,245 @@ func +(left: Vector2D, right: Vector2D)-> Vector2D {
 // /Users/dingfude/Git/Swifter4.0/Swift4.0_Playground.playground:271:6: Operator implementation without matching operator declaration
 
 // 对于新增的操作符需要告知编译器，这其实是个操作符
-
 precedencegroup DotProductPrecedence {
     associativity : none
     higherThan : MultiplicationPrecedence
 }
+infix operator +* : DotProductPrecedence
 
 func +*(left: Vector2D, right: Vector2D) -> Double{
     return left.x * right.x + left.y + right.y
 }
+*/
+
+
+// 9 func 的参数修饰符
+
+// inout 修饰符
+/*
+func incrementor(variable: inout Int) {
+    variable += 1
+}
+
+var index = 0
+incrementor(variable: &index)
+
+*/
+
+
+// 10 字面量表达
+
+//ExpressibleByExtendedGraphemeClusterLiteral
+//ExtendedGraphemeClusterLiteralConvertible
+//ExpressibleByUnicodeScalarLiteral
+/*
+class Person : ExpressibleByStringLiteral {
+    
+    let name : String
+    init(name value : String) {
+        self.name = value
+    }
+    
+    required convenience init(stringLiteral value: String){
+        self.init(name: value)
+    }
+    
+    required convenience init(unicodeScalarLiteral value: String) {
+        self.init(name: value)
+    }
+    
+    required convenience  init(extendedGraphemeClusterLiteral value: String) {
+        self.init(name: value)
+    }
+}
+
+let person : Person = "张三"
+print(person.name)
+*/
+
+// 11 下标  扩展下标
+/*
+extension Array {
+    subscript(input: [Int]) -> ArraySlice<Element>{
+        get {
+            var result = ArraySlice<Element>()
+            for i in input{
+                assert(i < self.count, "Index out of range")
+                result.append(self[i])
+            }
+            return result
+        }
+        set {
+            for (index ,i) in input.enumerated() {
+                assert(i < self.count, "Index out of range")
+                self[i] = newValue[index]
+            }
+        }
+    }
+}
+
+var array = [1,2,3,4,5]
+let newArray = array[[0, 2, 3]]
+print(newArray) // [1, 3, 4]
+array[[0, 2, 3]] = [-1, -3, -4]
+print(array) // [-1, 2, -3, -4, -5]
+
+*/
+// 12 方法嵌套 方法中定义方法
+/*
+func appendQuery(url: String, key: String, value: AnyObject) ->String{
+    
+    func appendQueryDictionary(url: String, key: String, value: [String:AnyObject]) ->String{
+        // ...
+        return ""
+    }
+    
+    func appendQueryArray(url: String, key: String, value: [AnyObject]) ->String{
+        // ...
+        return ""
+    }
+    
+    func appendQuerySingle(url: String, key: String, value: AnyObject) ->String{
+        // ...
+        return ""
+    }
+    
+    if let dictionary = value as? [String : AnyObject] {
+        return appendQueryDictionary(url: url, key: key, value: dictionary)
+    } else if let array = value as? [AnyObject] {
+        return appendQueryArray(url: url, key: key, value: array)
+    } else {
+        return appendQuerySingle(url: url, key: key, value: value)
+    }
+}
+
+*/
+
+
+// 12 命名空间
+
+// MyClass.hello()
+
+// 命名空间 + 类名（对象） + 方法
+// MyFramework.MyClass.hello()
+
+// 另一种，对于同名的类放入两个不同类型嵌套中
+/*
+struct MyClassContaier1 {
+    class MyClass {
+        class func hello(){
+            //..
+        }
+    }
+}
+
+struct MyClassContaier2 {
+    class MyClass {
+        class func hello(){
+            //..
+        }
+    }
+}
+
+MyClassContaier1.MyClass.hello()
+MyClassContaier2.MyClass.hello()
+
+*/
+
+// 13 typealias
+/*
+typealias Location = CGPoint
+typealias CleanRecordShareBlock = (_ index:Int)->()
+var cleanRecordShareBlock : CleanRecordShareBlock = { _ in }
+
+// 泛型
+class Person<T> { }
+typealias Worker<T> = Person<T>
+
+// 多协议合并
+protocol Cat {  }
+protocol Dog {  }
+
+typealias Pat = Cat & Dog
+
+class AAA : Pat {
+    //...
+}
+*/
+
+// 14 associatedtype 关联类型关键字
+// 在父类或者协议中设定添加一个限定， 在子类或者实现类中指定具体的类型
+
+// 例如自定义字面量的实现
+
+//    public protocol ExpressibleByStringLiteral : ExpressibleByExtendedGraphemeClusterLiteral {
+//        associatedtype StringLiteralType // 限定类型，在实现类中确定
+//        public init(stringLiteral value: Self.StringLiteralType)
+//    }
+//    class Person : ExpressibleByStringLiteral {
+//        typealias StringLiteralType = String
+//        public init(stringLiteral value: Self.StringLiteralType)
+//    }
+
+
+// 15, 可变参数函数
+/*
+func sum(input: Int...) ->Int {
+    return input.reduce(0, +)
+}
+
+print(sum(input: 1,2,3,4,5)) // 15
+
+// 并且可变参数不必限定在最后一个参数
+// 一个方法只能接受一个参数是可变的，必须是同一种类型
+func myFunc(numbers: Int..., string: String){
+    numbers.forEach {
+        for i in 0..<$0 {
+            print("\(i+1) : \(string)")
+        }
+    }
+}
+
+myFunc(numbers: 1,2,3, string: "hello")
+//1 : hello
+//1 : hello
+//2 : hello
+//1 : hello
+//2 : hello
+//3 : hello
+
+
+*/
+
+// 16, 初始化顺序
+// 在某个子类中，初始化方法里的语句的顺序并不是随意的，
+// 我们需要保证在当前子类实例的成员初始化完成后才能调用父类的初始化方法
+
+class Cat {
+    var name : String
+    init() {
+        name = "cat"
+    }
+}
+
+class Tiger : Cat {
+    let power : Int
+    override init() {
+        power = 10
+//        super.init()            //  如果不改变父类的属性，可以不写这一行 + 下一行
+//        name = "tiger"          //
+    }
+}
+
+//    一般来说， 子类的初始化顺序是：
+//    1, 设置子类需要自己初始化的参数， power = 10
+//    2, 调用父类的相应的初始化方法，super.init()
+//    3, 对父类中需要改变的成员进行设定 name = "tiger"
+//    其中第三步是更具情况决定的，如果我们在子类中不需要对父类成员作出改变，就不存在第三步
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 
 
 
 
