@@ -508,15 +508,117 @@ class Tiger : Cat {
 
 
 
-// 
+// Designated, Convenience 和 Required
+// 指定构造     便利构造        必须
+/*
+class ClassA{
+    let numA : Int
+    required init(num: Int) {        // 指定构造函数
+        numA = num
+    }
+    
+    convenience init(bigNum: Bool){ // 便利构造
+        self.init(num: bigNum ? 10000 : 1)
+    }
+}
+class ClassB: ClassA {
+    var numB: Int
+    required init(num: Int){            // 子类必须实现
+        numB = num + 1
+        super.init(num: num)
+    }
+    
+//    convenience init(num: Int, bigNum: Bool){
+//        numB = bigNum ? 10000 : 1
+//        self.init(num: num)
+//    }
+    
+}
+
+//    初始化方法永远遵循以下两个原则
+//    1， 初始化路径必须保证完全初始化，这可以通过调用本类型的
+//      designated初始化方法来得到保证
+//    2， 子类的designated初始化方法必须调用父类的designated方法，
+//      以保证父类也完全初始化
+//
+//
 
 
+*/
+
+// 17, 初始化返回nil
+//  convenience init?(string URLString: String)
+/*
+extension Int {
+    init?(fromString: String){
+        self = 0
+        var digit = fromString.count - 1
+        for c in fromString {
+            var numb = 0
+            if let n = Int(String(c)){
+                numb = n
+            }else {
+                switch c {
+                case "一": numb = 1
+                case "二": numb = 2
+                case "三": numb = 3
+                case "四": numb = 4
+                case "五": numb = 5
+                case "六": numb = 6
+                case "七": numb = 7
+                case "八": numb = 8
+                case "九": numb = 9
+                case "零": numb = 0
+                default: return nil
+                }
+            }
+            self = self + numb * Int(pow(10.0, Double(digit)))
+            digit = digit - 1
+        }
+    }
+}
+
+print(Int(fromString: "12"))
+print(Int(fromString: "三九零"))
+print(Int(fromString: "吃了吗"))
+
+*/
+
+// 18 static 和 class
+
+// static 可以用在 struct enum 中表示类型作用域
+// class 用在  class 中
+// class 中使用 class关键字开头的属性会报错
+// 任何时候使用 static 都是可以的
+
+// 19 多类型和容器
+/*
+// 协议
+let mixed : [CustomStringConvertible] = [1, "two", 3]
+
+mixed.forEach { (obj) in
+    print(obj.description)
+}
 
 
+// 这种常用的场景，是用 enum可以带值的特点，将类型信息封装到特定的 enum中
 
+enum IntOrString{
+    case IntValue(Int)
+    case StringValue(String)
+}
+// 通过这种方法，我们完整的在编译时保留了不同类型的信息
+let minxed = [ IntOrString.IntValue(1), IntOrString.StringValue("Two")]
 
-
-
+for value in minxed {
+    switch value {
+    case let .IntValue(i):
+        print(i * 2)
+    case let .StringValue(s):
+        print(s.capitalized)
+    }
+}
+*/
 
 
 
