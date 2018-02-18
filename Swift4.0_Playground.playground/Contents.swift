@@ -483,7 +483,7 @@ myFunc(numbers: 1,2,3, string: "hello")
 // 16, 初始化顺序
 // 在某个子类中，初始化方法里的语句的顺序并不是随意的，
 // 我们需要保证在当前子类实例的成员初始化完成后才能调用父类的初始化方法
-
+/*
 class Cat {
     var name : String
     init() {
@@ -505,7 +505,7 @@ class Tiger : Cat {
 //    2, 调用父类的相应的初始化方法，super.init()
 //    3, 对父类中需要改变的成员进行设定 name = "tiger"
 //    其中第三步是更具情况决定的，如果我们在子类中不需要对父类成员作出改变，就不存在第三步
-
+*/
 
 
 // Designated, Convenience 和 Required
@@ -621,12 +621,214 @@ for value in minxed {
 */
 
 
+// 19 default 参数
 
 
+//let string = NSLocalizedString("11", comment: "22")
+
+//  其中 default 参数为方法内部的常量，这个取值隐藏在方法实现的内部
+//    public func NSLocalizedString(_ key: String,
+//                                  tableName: String? = default,
+//        bundle: Bundle = default,
+//        value: String = default, c
+//        omment: String) -> String
+
+//func test(tabName : String? = default, value: String = default){
+//
+//}
 
 
+// 20 正则表达式
+/*
+
+struct RegexHelper {
+    let regex: NSRegularExpression
+    init(_ pattern : String) throws {
+        try regex = NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+    }
+    
+    func match(_ input : String) -> Bool {
+        let matchs = regex.matches(in: input, options: [], range: NSMakeRange(0, input.utf16.count))
+        return matchs.count > 0
+    }
+}
+
+precedencegroup MatchPrecedence {
+    associativity: none
+    higherThan: DefaultPrecedence
+}
+infix operator =~: MatchPrecedence
+
+func =~(lhs : String, rhs: String) -> Bool {
+    do {
+        return try RegexHelper(rhs).match(lhs)
+    } catch _ {
+        return false
+    }
+}
+// 常用的八个正则表达式
+//https://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149
+///^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+if "onev@onevcat.com" =~ "^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$" {
+    print("有效的邮箱") //  有效的邮箱
+}else {
+    print("无效的邮箱")
+}
+*/
+
+// 21 模式匹配
+
+/*
+let a = 1
+
+let b = 2
+
+let c = a ~= b
+
+switch 是默认调用了 ~= 操作符
+
+//func ~=<T : Equatable>(a: T, b : T) -> Bool
+//func ~=<T>(lhs: _OptionNilComparisonType, rhs: T?) -> Bool
+//func ~=<I : IntervalType>(pattern: I, value: I.Bound) -> Bool
+
+*/
+
+// 22  ...和 ..<
+
+/*
+// ... 和 ..< 支持泛型
+//    func ...<T :Comparable>(start : T, end: T) -> ClosedInterval<T>
+//    func ..<<T: Comparable>(start : T, end: T) -> HalfOpenInterval<T>
+
+let test = "HelLo"
+let interval = "a"..."z"
+for c in test {
+    if !interval.contains(String(c)){
+        print("\(c)不是小写字母")
+    }
+}
+
+let ascRange = "\0"..."~"  // 这两个字符是第一个和最后一个
+// 判断是不是有效的ascii 字符
+*/
+
+// 23  AnyClass, 元类型和 .self
+// 任意 -> Any, AnyObject, AnyClass
+
+//    typealias AnyClass = AnyObject.Type
+/*
+// 声明时， 我们使用 .Type 表示这个类型的类型
+// 取出时， 我们使用 .self
+class A {
+    class func method () { }
+}
+
+let typeA : A.Type = A.self
+
+// AnyClass 任意类型本身
+
+let anyClass : AnyClass = A.self
+
+typeA.method()
+(anyClass as! A.Type).method()
+
+class AA : UIViewController { }
+class BB : UIViewController { }
+
+let useingVCTypes: [AnyClass] = [AA.self, BB.self]
+
+func setupViewControllers(_ vcTypes: [AnyClass]){
+    vcTypes.forEach { (vcType) in
+        if vcType is UIViewController.Type {
+            let vc = (vcType as! UIViewController.Type).init()
+            // ...
+        }
+    }
+}
+
+let tabView: UITableView
+tabView.register(UITableViewCell.self, forCellReuseIdentifier: "myCell")
 
 
+//class, struct, enum 的元类型，通过 .Type
+//protocol 的元类型，通过 .Protocol
+*/
+
+
+// 24 协议和类方法中的self
+
+//    protocol InternalType {
+//        func clamp(intervalToClamp: Self) -> Self
+//    }
+
+// 接受一个实现了该协议自身的类型，并返回一个同样的类型(还包括这个类型的子类)
+//
+/*
+protocol Copyable {
+    func copy() -> Self
+}
+
+class MyClass : Copyable {
+    var num = 1
+    
+    // 要保持和接口方法的返回类型一致
+    func copy() -> Self{
+        let result = type(of: self).init()
+        result.num = num
+        return result
+    }
+    required init(){ }
+}
+ */
+
+// 25 动态类型和多方法
+// Swift 不支持多方法，不能根据对象在动态时的类型进行合适的重载方法调用
+
+print(111)
+
+class Pet {}
+class Cat: Pet {}
+class Dog: Pet {}
+
+func printPet(_ pet :Pet){
+    print("Pet")
+}
+
+func printPet(_ cat: Cat){
+    print("Cat")
+}
+
+func printPet(_ dog: Dog){
+    print("Dog")
+}
+//
+printPet(Cat())
+printPet(Dog())
+printPet(Pet())
+//Cat
+//Dog
+//Pet
+
+// 但是
+func printThem(_ pet: Pet, _ cat : Cat){
+    printPet(pet)
+    printPet(cat)
+}
+//Pet
+//Cat
+
+// 这是因为Swift默认时不采用动态派发，因此方法调用只能在编译时确定
+// 如果要绕过 ,如下
+
+func printThem(_ pet: Pet, _ cat : Cat){
+    if let aCat = pet as? Cat {
+        printPet(aCat)
+    } else  let aDog = pet as? Dog {
+        printPet(aDog)
+    }
+    printPet(cat)
+    let a = dd
+}
 
 
 
