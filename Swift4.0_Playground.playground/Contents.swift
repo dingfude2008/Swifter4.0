@@ -820,15 +820,14 @@ func printThem(_ pet: Pet, _ cat : Cat){
 // 这是因为Swift默认时不采用动态派发，因此方法调用只能在编译时确定
 // 如果要绕过 ,如下
 
-func printThem(_ pet: Pet, _ cat : Cat){
-    if let aCat = pet as? Cat {
-        printPet(aCat)
-    } else  let aDog = pet as? Dog {
-        printPet(aDog)
-    }
-    printPet(cat)
-    let a = dd
-}
+//    func printThem(_ pet: Pet, _ cat : Cat){
+//        if let aCat = pet as? Cat {
+//            printPet(aCat)
+//        } else  let aDog = pet as? Dog {
+//            printPet(aDog)
+//        }
+//        printPet(cat)
+//    }
 
 
 
