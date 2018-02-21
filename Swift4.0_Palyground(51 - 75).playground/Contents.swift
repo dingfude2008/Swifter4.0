@@ -594,23 +594,69 @@ do {
 // @noreturn 表示如果在一个需要返回值的方法里调用了这个方法，就不需要再有返回值了
 // 例如
 
-enum MyEnum {
-    case Value1,Value2
-}
+//    enum MyEnum {
+//        case Value1,Value2
+//    }
+//
+//    func check(someValue: MyEnum) -> String {
+//        switch someValue {
+//        case .Value1:
+//            return "OK"
+//        case .Value2:
+//            return "MayBe OK"
+//        default:
+//            // 这个分支没有返回 String, 也能编译通过
+//            fatalError("Show not show")
+//        }
+//    }
 
-func check(someValue: MyEnum) -> String {
-    switch someValue {
-    case .Value1:
-        return "OK"
-    case .Value2:
-        return "MayBe OK"
-    default:
-        // 这个分支没有返回 String, 也能编译通过
-        fatalError("Show not show")
+// 抽象类型和抽象函数的实现
+// 在父类中强制抛出错误，来让子类重写这个方法
+
+class MyClass {
+    func methodMustBeImplementedSubClass(){
+        fatalError("子类必须重写这个方法")
     }
 }
 
-// 194 页
+class SonClass: MyClass {
+    override func methodMustBeImplementedSubClass() {
+        print("子类实现方法")
+    }
+}
+
+class AnotherSonClass: MyClass{
+    
+}
+
+SonClass().methodMustBeImplementedSubClass()
+
+//Fatal error: 子类必须重写这个方法: file Swift4.0_Palyground(51 - 75).playground, line 618
+//AnotherSonClass().methodMustBeImplementedSubClass()
+
+
+// 对于我们不希望别人随意调用，但是又不得不去实现的防范，我们都应该使用 fatalError来避免任何可能的误会。比如父类表明了某个 init方法是required的，但是子类永远不会使用到这个方法来初始化，就可以使用类似的方法。比如
+//    required init(coder: NSCoder){
+//        fatalError("NSCoding not supported")
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
